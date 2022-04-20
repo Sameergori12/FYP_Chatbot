@@ -1,0 +1,44 @@
+Chicken Pakodi: 299.00
+Roasted Chicken: 249.00
+Mix Platters: 279.00
+Chicken Steak: 260.00
+Chicken Steak Kebab: 329.00
+Fish Steak: 319.00
+Chicken Mandi: 529.00
+Mutton Mandi: 649.00
+Fish Mandi: 549.00
+Veg Mandi: 400.00
+Gulab Jamun: 59.00
+Quarbani Ka Meetha: 70.00
+Double Ka Meetha: 70.00
+Chicken Mandi, Chicken Stick Kebab, Coke: 329.00
+Chicken Mandi, Fish , Coke: 329.00
+Mutton Mandi, Chicken Pakodi, Coke: 349.00
+Mutton Mandi, Chicken Steak, Fish: 349.00
+Chicken Mandi, Fish Steak, Roasted Chicken: 329.00
+Fish Mandi, Roasted Chicken, Coke: 339.00
+Fish Mandi, Chicken Pakodi, Coke: 350.00
+Mayonnaise: 29.00
+Fried Onions: 29.00
+Mandi Rice: 169.00
+Chicken: 159.00
+Mutton: 199.00
+Fish: 169.00
+Fruit Punch: 129.00
+Watermelon Cooler: 119.00
+Lichi Sparkel: 119.00
+Vargin Mojito: 119.00
+Juicy Mutton Mandi: 699.00
+Raan Mandi: 749.00
+Jumbo Mutton Mandi: 1999.00
+Juicy Mutton Curry: 219.00
+Arabina Heleem: 249.00
+Basbousa: 189.00
+Cucumber Mint: 119.00
+Coco Colada: 119.00
+Kiwi Punch: 119.00
+Ambur Mandi: 729.00
+Juicy Chicken Mandi: 579.00
+Fish Fry: 169.00
+Hummus: 149.00
+Blue Star: 119.00
