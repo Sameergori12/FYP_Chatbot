@@ -24,6 +24,9 @@ from Menu import random, menu, item_list, prices, inquiries
 TOKEN = Token
 print("Customer bot started...")
 cart_dict = {}
+location = False
+OrderType = False
+
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
