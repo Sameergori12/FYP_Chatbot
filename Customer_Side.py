@@ -8,7 +8,8 @@ from telegram.ext import *
 import re
 import io
 # to know the date and time
-from datetime import datetime
+import datetime
+
 
 # importing the token
 from key import *
@@ -24,7 +25,7 @@ from Menu import random, menu, item_list, prices, inquiries
 TOKEN = Token
 print("Customer bot started...")
 cart_dict = {}
-location = False
+Location = False
 OrderType = False
 
 
@@ -44,14 +45,35 @@ def start(update: Update, context: CallbackContext):
                                    "/cart - shows the cart items \n"
                                    "/delete [item_no] - enter number of item \n"
                                    "/feedback [Enter the feedback] - to submit the feedback\n"
-                                   "/checkout - check out of the session and place order")
+                                   "/checkout - check out of the session and place order\n")
 
 
 # user should choose an option among three (Menu, Day to Day Specials, Inquires)
 def menu_list(update: Update, context: CallbackContext):
-    # calling a method from Menu file.
-    update.message.reply_text(text="cation 📍 Just like this:")
-    random(update, context)
+    currentTime = datetime.datetime.now().time()
+    print(currentTime)
+    if time_in_range(currentTime):
+        reply_buttons = InlineKeyboardMarkup([
+            [InlineKeyboardButton("Online Delivery", callback_data="Online")],
+            [InlineKeyboardButton("Pickup", callback_data='Pickup')]
+        ])
+
+        # sends the message with three option buttons attached.
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Hi there, please choose your order type.",
+                                 reply_markup=reply_buttons)
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry we are closed for orders. You can make orders from \n"
+                                                                        "10AM - 10PM everyday. Thank you and visit again.")
+
+
+def time_in_range(current):
+
+    # Returns whether current is in the range [start, end]
+    start = datetime.time(10, 0, 0)
+    end = datetime.time(22, 30, 0)
+    return start <= current <= end
+
+    return start <= current <= end
 
 
 # displays the cart list
@@ -171,6 +193,15 @@ def action(update: Update, context: CallbackContext):
     elif choice == "pickup-time":
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="You can collect the after 20-25 mins from ordered time.")
+    elif choice == "Pickup":
+        random(update, context)
+    elif choice == "Online":
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="please type in your location coordinates using /locate (lat),(long) using this format.")
+    elif choice == "change_Pickup":
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Your Order TYpe has been successfully updated to Pickup.")
+    elif choice == "change_Online":
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Your Order type has been successfully updated to Online Delivery.")
     # if input is anything beyond the above choices, asking the user regarding their problem.
     else:
         context.bot.send_message(chat_id=update.effective_chat.id, text="What's your problem")
@@ -190,7 +221,7 @@ def location(update: Update, context: CallbackContext):
 
     dist = distance.distance(rest_location, user_location).km
     if dist <= 10:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="your order will be delivered to the location")
+        random(update, context)
     elif dist > 10:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="Delivery Service is not available due to the distance issues.")
@@ -270,6 +301,19 @@ def organize():
     return car, order_amt
 
 
+def changeOrderType(update: Update, context: CallbackContext):
+    reply_buttons = InlineKeyboardMarkup([
+        [InlineKeyboardButton("Online Delivery", callback_data="change_Online")],
+        [InlineKeyboardButton("Pickup", callback_data='change_Pickup')]
+    ])
+
+    # sends the message with three option buttons attached.
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Re-choose your Order type.",
+                             reply_markup=reply_buttons)
+
+
+
+
 reg = r'(Menu|menu)'
 
 
@@ -309,7 +353,7 @@ def main():
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('start_session', menu_list))
     dp.add_handler(CommandHandler('feedback', feedback))
-    dp.add_handler(CommandHandler('location', location))
+    dp.add_handler(CommandHandler('locate', location))
     dp.add_handler(CommandHandler('cart', cart_list))
     dp.add_handler(CommandHandler('checkout', checkout))
     dp.add_handler(CommandHandler('help', help_commands))
@@ -319,7 +363,7 @@ def main():
     location_handler = MessageHandler(Filters.location, location)
     dp.add_handler(location_handler)
 
-    updater.dispatcher.add_handler(MessageHandler(Filters.regex(reg), hi))
+    #updater.dispatcher.add_handler(MessageHandler(Filters.regex(reg), hi))
     updater.dispatcher.add_handler(MessageHandler(Filters.regex(regg), hello))
     updater.dispatcher.add_handler(MessageHandler(Filters.regex(reggi), dan))
     dp.add_error_handler(error)

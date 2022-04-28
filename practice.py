@@ -39,7 +39,7 @@ location = app.geocode("Ashok Colony,Kapra, India").raw
 # print raw data
 pprint(location)'''
 
-from geopy.geocoders import Nominatim
+'''from geopy.geocoders import Nominatim
 from geopy import distance
 
 geolocator = Nominatim(user_agent='geoapiExercises')
@@ -65,4 +65,19 @@ print('address: ', location.address)
 if(dist<10):
     print("Yes sir")
 elif (dist>10):
-    print('Distance beyond range')
+    print('Distance beyond range')'''
+import datetime
+
+def time_in_range(current):
+    """Returns whether current is in the range [start, end]"""
+
+    start = datetime.time(10, 0, 0)
+    end = datetime.time(23, 0, 0)
+    return start <= current <= end
+
+
+
+current = datetime.datetime.now().time()
+
+print(time_in_range(current))
+# True (if you're not a night owl) ;)
