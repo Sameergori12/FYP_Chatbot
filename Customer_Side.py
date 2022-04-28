@@ -186,7 +186,7 @@ def action(update: Update, context: CallbackContext):
                                  text="You can contact +91 7075234341 for any inquiries")
     elif choice == 'open_timings':
         context.bot.send_message(chat_id=update.effective_chat.id, text="Store Timings - 10:00 AM to 11:00 PM\n"
-                                                                        "Bot Order Timings - 11:00 AM to 10:00 PM")
+                                                                        "Bot Order Timings - 10:00 AM to 10:00 PM")
     elif choice == "delivery_time":
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="You will receive your order within 35-40 mins from ordered time.")
