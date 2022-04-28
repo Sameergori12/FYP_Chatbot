@@ -69,7 +69,7 @@ def menu_list(update: Update, context: CallbackContext):
 def time_in_range(current):
 
     # Returns whether current is in the range [start, end]
-    start = datetime.time(10, 0, 0)
+    start = datetime.time(11, 0, 0)
     end = datetime.time(22, 30, 0)
     return start <= current <= end
 
@@ -185,8 +185,8 @@ def action(update: Update, context: CallbackContext):
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="You can contact +91 7075234341 for any inquiries")
     elif choice == 'open_timings':
-        context.bot.send_message(chat_id=update.effective_chat.id, text="10:00 AM to 10:00 PM\n"
-                                                                        "Weekends 10:00 AM to 12:00 PM")
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Store Timings - 10:00 AM to 11:00 PM\n"
+                                                                        "Bot Order Timings - 11:00 AM to 10:00 PM")
     elif choice == "delivery_time":
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="You will receive your order within 35-40 mins from ordered time.")
