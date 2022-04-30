@@ -74,8 +74,8 @@ def menu_list(update: Update, context: CallbackContext):
 def time_in_range(current):
 
     # Returns whether current is in the range [start, end]
-    start = datetime.time(11, 0, 0)
-    end = datetime.time(23, 30, 0)
+    start = datetime.time(10, 0, 0)
+    end = datetime.time(22, 30, 0)
     return start <= current <= end
 
     return start <= current <= end
