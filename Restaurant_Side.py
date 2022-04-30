@@ -23,11 +23,21 @@ admin_ids = [967864205]
 
 # displays the current Menu with the prices.
 def Menu(update: Update, context: CallbackContext):
+
     if update.message.from_user.id in admin_ids:
-        items = str(item_list)
-        stir = items.replace(",", "\n")
+        item_prices = {}
+        with open("temp_menuitems.txt") as f:
+            for line in f:
+                (k, v) = line.replace(':', ':').replace('-', ':').split(':')
+                item_prices[k] = float(v)
+        list_items = list(item_prices.items())
+
+        final = ''
+        for x in list_items:
+            final += str(x).replace(",",":").replace("'","").replace("(","").replace(")","\n")
+
         # displaying the items in the bot.
-        update.message.reply_text(f'Current Item list: \n \n{stir[1:-1]}')
+        update.message.reply_text(f'Current Item List: \n\n{final}')
     else:
         update.message.reply_text('You are not authorized to access this BOT')
 
@@ -87,10 +97,35 @@ def price_change(update: Update, context: CallbackContext):
             with open("temp_menuitems.txt", 'w') as f:
                 for key, value in menu_items.items():
                     f.write('%s: %.2f\n' % (key, float(value)))
+            f.close()
             update.message.reply_text("Price changes have been made.")
     else:
         update.message.reply_text("You are not authorized to access this Bot")
 
+
+def maintenance(update: Update,context: CallbackContext):
+    if update.message.from_user.id in admin_ids:
+        with open("maintenance.txt", 'w') as f:
+            f.write("Maintenance")
+        f.close()
+        update.message.reply_text("Bot is set to Maintenance state.")
+
+    else:
+        update.message.reply_text("You are not authorized to access this Bot")
+
+
+def online(update: Update,context: CallbackContext):
+    if update.message.from_user.id in admin_ids:
+        with open("maintenance.txt", 'r+') as f:
+            content = f.read()
+            if len(content) >= 5:
+                f.truncate(0)
+        f.close()
+
+        update.message.reply_text("Bot is online")
+
+    else:
+        update.message.reply_text("You are not authorized to access this Bot")
 
 def main():
     # Start the bot
@@ -106,6 +141,8 @@ def main():
     dp.add_handler(CommandHandler('menu', Menu))
     dp.add_handler(CommandHandler('help', help_commands))
     dp.add_handler(CommandHandler('change', price_change))
+    dp.add_handler(CommandHandler('maintenance', maintenance))
+    dp.add_handler(CommandHandler('online', online))
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, action))
 
     # connect to telegram and wait for the messages.

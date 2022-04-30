@@ -251,7 +251,7 @@ def default_or_not(update: Update, context: CallbackContext):
             item_prices[k] = float(v)
 
     if 0 in item_prices.values():
-        update.message.reply_text("Try your Luck🎯!!!.... Few items are will be handover-ed without any bill")
+        update.message.reply_text("Try your Luck🎯!!!.... Few items are will be handover-ed without any bill for 0 price.")
     else:
         pass
 

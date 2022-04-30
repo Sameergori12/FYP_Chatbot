@@ -51,26 +51,31 @@ def start(update: Update, context: CallbackContext):
 # user should choose an option among three (Menu, Day to Day Specials, Inquires)
 def menu_list(update: Update, context: CallbackContext):
     currentTime = datetime.datetime.now().time()
-    print(currentTime)
-    if time_in_range(currentTime):
-        reply_buttons = InlineKeyboardMarkup([
-            [InlineKeyboardButton("Online Delivery", callback_data="Online")],
-            [InlineKeyboardButton("Pickup", callback_data='Pickup')]
-        ])
+    f = open("maintenance.txt", 'r+')
+    content = f.read()
+    if content == 'Maintenance':
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Bot is under Maintenance. Sorry for the inconvenience")
+    elif len(content)==0:
+        if time_in_range(currentTime):
+            reply_buttons = InlineKeyboardMarkup([
+                [InlineKeyboardButton("Online Delivery", callback_data="Online")],
+                [InlineKeyboardButton("Pickup", callback_data='Pickup')]
+            ])
 
-        # sends the message with three option buttons attached.
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Hi there, please choose your order type.",
-                                 reply_markup=reply_buttons)
-    else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry we are closed for orders. You can make orders from \n"
-                                                                        "10AM - 10PM everyday. Thank you and visit again.")
+            # sends the message with three option buttons attached.
+            context.bot.send_message(chat_id=update.effective_chat.id, text="Hi there, please choose your order type.",
+                                     reply_markup=reply_buttons)
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="Sorry we are closed for orders. You can make orders from \n"
+                                          "10AM - 10PM everyday. Thank you and visit again.")
 
 
 def time_in_range(current):
 
     # Returns whether current is in the range [start, end]
     start = datetime.time(11, 0, 0)
-    end = datetime.time(22, 30, 0)
+    end = datetime.time(23, 30, 0)
     return start <= current <= end
 
     return start <= current <= end
@@ -180,7 +185,7 @@ def action(update: Update, context: CallbackContext):
                                                                         "Jubilee Hills, Hyderabad,"
                                                                         "Telangana- 5000033, INDIA")
         context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="This is the store address: https://maps.app.goo.gl/5NofNcVCg7jLaM4t6")
+                                 text="This is the store Location: https://maps.app.goo.gl/5NofNcVCg7jLaM4t6")
     elif choice == 'customer_care_number':
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="You can contact +91 7075234341 for any inquiries")
@@ -199,7 +204,7 @@ def action(update: Update, context: CallbackContext):
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="please type in your location coordinates using /locate (lat),(long) using this format.")
     elif choice == "change_Pickup":
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Your Order TYpe has been successfully updated to Pickup.")
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Your Order Type has been successfully updated to Pickup.")
     elif choice == "change_Online":
         context.bot.send_message(chat_id=update.effective_chat.id, text="Your Order type has been successfully updated to Online Delivery.")
     # if input is anything beyond the above choices, asking the user regarding their problem.
@@ -224,7 +229,7 @@ def location(update: Update, context: CallbackContext):
         random(update, context)
     elif dist > 10:
         context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="Delivery Service is not available due to the distance issues.")
+                                 text="Delivery Service is not available due to the distance issues. Service is only available within the 10KM radius.")
 
 
 # to submit your feedback.
