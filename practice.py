@@ -66,6 +66,9 @@ if(dist<10):
     print("Yes sir")
 elif (dist>10):
     print('Distance beyond range')'''
+
+
+'''
 import datetime
 
 def time_in_range(current):
@@ -80,4 +83,23 @@ def time_in_range(current):
 current = datetime.datetime.now().time()
 
 print(time_in_range(current))
-# True (if you're not a night owl) ;)
+# True (if you're not a night owl) ;)'''
+
+
+# import module
+from datetime import date
+
+# get current date and time
+current_datetime = date.today()
+print("Current date & time : ", current_datetime)
+
+# convert datetime obj to string
+str_current_datetime = str(current_datetime)
+
+# create a file object along with extension
+file_name = str_current_datetime+".txt"
+file = open(file_name, 'a')
+content = "funny"
+file.write(content+"\n\n")
+print("File created : ", file.name)
+file.close()

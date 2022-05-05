@@ -1,11 +1,7 @@
-# importing the telegram bot
-import time
-
 import telegram
 from telegram import *
 from telegram.ext import *
-# importing the items and prices from Menu
-from Menu import item_list
+from datetime import date
 # importing json
 import json
 
@@ -23,12 +19,23 @@ def order(update: Update, context: CallbackContext):
             f = open("orders.txt", 'r+')
             content = f.read()
             if len(content) >= 5:
+                # get current date and time
+                current_datetime = date.today()
+
+                # convert datetime obj to string
+                str_current_datetime = str(current_datetime)
+
+                # create a file object along with extension
+                file_name = str_current_datetime + ".txt"
+                file = open(file_name, 'w')
+                file.write(content + "\n\n")
                 f.truncate(0)
+                file.close()
+                f.close()
             else:
                 continue
             update.message.reply_text(f" New Order Recieved \n"
                                       f"{content}")
-            time.sleep(5)
     else:
         update.message.reply_text('You are not authorized to access this BOT')
 
