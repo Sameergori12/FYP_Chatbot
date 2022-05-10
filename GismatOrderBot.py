@@ -27,14 +27,14 @@ def order(update: Update, context: CallbackContext):
 
                 # create a file object along with extension
                 file_name = str_current_datetime + ".txt"
-                file = open(file_name, 'w')
+                file = open(file_name, 'a')
                 file.write(content + "\n\n")
                 f.truncate(0)
                 file.close()
                 f.close()
             else:
                 continue
-            update.message.reply_text(f" New Order Recieved \n"
+            update.message.reply_text(f" New Order Recieved \n\n"
                                       f"{content}")
     else:
         update.message.reply_text('You are not authorized to access this BOT')

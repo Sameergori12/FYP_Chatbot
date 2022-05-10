@@ -39,7 +39,7 @@ location = app.geocode("Ashok Colony,Kapra, India").raw
 # print raw data
 pprint(location)'''
 
-'''from geopy.geocoders import Nominatim
+from geopy.geocoders import Nominatim
 from geopy import distance
 
 geolocator = Nominatim(user_agent='geoapiExercises')
@@ -60,12 +60,13 @@ location1 = (Lat1, Long1)
 location2 = (Lat2, Long2)
 dist = distance.distance(location1, location2).km
 print(dist, ' Kms')
-location = geolocator.reverse(Lat1, Long1)
+ald = Lat1, Long1
+location = geolocator.reverse(ald)
 print('address: ', location.address)
 if(dist<10):
     print("Yes sir")
 elif (dist>10):
-    print('Distance beyond range')'''
+    print('Distance beyond range')
 
 
 '''
@@ -86,7 +87,7 @@ print(time_in_range(current))
 # True (if you're not a night owl) ;)'''
 
 
-# import module
+"""# import module
 from datetime import date
 
 # get current date and time
@@ -102,4 +103,4 @@ file = open(file_name, 'a')
 content = "funny"
 file.write(content+"\n\n")
 print("File created : ", file.name)
-file.close()
+file.close()"""

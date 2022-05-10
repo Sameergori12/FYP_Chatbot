@@ -25,9 +25,11 @@ from Menu import random, menu, item_list, prices, inquiries
 TOKEN = Token
 print("Customer bot started...")
 cart_dict = {}
-Location = False
-OrderType = False
+Location = ''
+Order_type = ''
 
+
+session_started = False
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -50,6 +52,8 @@ def start(update: Update, context: CallbackContext):
 
 # user should choose an option among three (Menu, Day to Day Specials, Inquires)
 def menu_list(update: Update, context: CallbackContext):
+
+    start_session = True
     currentTime = datetime.datetime.now().time()
     f = open("maintenance.txt", 'r+')
     content = f.read()
@@ -158,23 +162,6 @@ def action(update: Update, context: CallbackContext):
     elif choice == "back":
         update.callback_query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
         random(update, context)
-    elif choice == 'Yes_checkout':
-        if len(cart_dict) == 0:
-            context.bot.send_message(chat_id=update.effective_chat.id, text="Cart is empty")
-        else:
-            with io.open('orders.txt', "a", encoding="utf-8") as f:
-                car, order_amt = organize()
-                stir = ' \n'.join(car)
-                stir += "\n \n" + "Total amount: " + "\t     ₹" + str(order_amt)
-                print(stir)
-                f.write(stir)
-                f.write("\n####\n")
-                f.close()
-                cart_dict.clear()
-            context.bot.send_message(chat_id=update.effective_chat.id, text="Your Meal is on the way.")
-    elif choice == 'No_checkout':
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Checked Out")
-        cart_dict.clear()
     elif choice == 'no':
         context.bot.send_message(chat_id=update.effective_chat.id, text="Ok")
     elif choice == 'inquiry':
@@ -199,37 +186,69 @@ def action(update: Update, context: CallbackContext):
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="You can collect the after 20-25 mins from ordered time.")
     elif choice == "Pickup":
+        Order_type = 'Pickup'
         random(update, context)
     elif choice == "Online":
+        OrderType = 'Online'
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="please type in your location coordinates using /locate (lat),(long) using this format.")
     elif choice == "change_Pickup":
+        OrderType = 'Pickup'
         context.bot.send_message(chat_id=update.effective_chat.id, text="Your Order Type has been successfully updated to Pickup.")
     elif choice == "change_Online":
+        OrderType = 'Online'
         context.bot.send_message(chat_id=update.effective_chat.id, text="Your Order type has been successfully updated to Online Delivery.")
+    elif choice == 'Yes_checkout':
+        if len(cart_dict) == 0:
+            context.bot.send_message(chat_id=update.effective_chat.id, text="Cart is empty")
+        else:
+            with io.open('orders.txt', "a", encoding="utf-8") as f:
+                car, order_amt = organize()
+                stir = f'Name: {update.effective_user.full_name} \n'\
+                       f'Location: {Location} \n' \
+                       f'phone Number: Not done yet \n\n'
+                stir += ' \n'.join(car)
+                stir += "\n \n" + "Total amount: " + "\t     ₹" + str(order_amt)
+                print(stir)
+                f.write(stir)
+                f.write("\n####\n")
+                f.close()
+                cart_dict.clear()
+            context.bot.send_message(chat_id=update.effective_chat.id, text="Your Meal is on the way.")
+    elif choice == 'No_checkout':
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Checked Out")
+        cart_dict.clear()
     # if input is anything beyond the above choices, asking the user regarding their problem.
     else:
         context.bot.send_message(chat_id=update.effective_chat.id, text="What's your problem")
 
 
 def location(update: Update, context: CallbackContext):
+    global Location
     user = update.message.from_user
     # getting the feedback form the bot
     user_coordinates = update.effective_message.text
-    coordinates = user_coordinates[9:].strip()
+    coordinates = user_coordinates[8:].strip()
     user_lat, user_long = coordinates.replace(':', ',').replace('-', ',').split(',')
 
     geolocator = Nominatim(user_agent='geoapiExercises')
     rest_lat, rest_long = 17.4299296940903, 78.41130927055349
     rest_location = (rest_lat, rest_long)
     user_location = (user_lat, user_long)
+    locname = geolocator.reverse(user_location)
+    Location = locname.address
 
     dist = distance.distance(rest_location, user_location).km
+    print(dist)
+
+
     if dist <= 10:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Location confirmed")
         random(update, context)
     elif dist > 10:
         context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="Delivery Service is not available due to the distance issues. Service is only available within the 10KM radius.")
+                                 text="Delivery Service is only available within the 10KM radius due to the distant issues.")
 
 
 # to submit your feedback.
@@ -269,6 +288,7 @@ def help_commands(update: Update, context: CallbackContext):
 
 # places the order on checking out. if no order, displays the "no order placed" text.
 def checkout(update: Update, context: CallbackContext):
+
     # if cart is empty - just checks out without placing any order
     if len(cart_dict) == 0:
         reply_button = InlineKeyboardMarkup([
@@ -290,7 +310,7 @@ def checkout(update: Update, context: CallbackContext):
         stir = ' \n'.join(cart_final)
         stir += "\n \n" + "Total amount: " + "\t     " + str(order_amt)
         context.bot.send_message(chat_id=update.effective_chat.id, text=f'Name: {update.effective_user.full_name} \n'
-                                                                        f'Location: Not done yet \n'
+                                                                        f'Location: {Location} \n'
                                                                         f'phone Number: not done yet \n\n'
                                                                         f"Cart items: {line_space}{stir}",
                                  reply_markup=reply_buttons)
@@ -362,6 +382,7 @@ def main():
     dp.add_handler(CommandHandler('cart', cart_list))
     dp.add_handler(CommandHandler('checkout', checkout))
     dp.add_handler(CommandHandler('help', help_commands))
+    dp.add_handler(CommandHandler('change_order_type', changeOrderType))
     dp.add_handler(CommandHandler('delete', delete))
     dp.add_handler(CallbackQueryHandler(action))
 
