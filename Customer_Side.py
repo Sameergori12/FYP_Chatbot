@@ -281,6 +281,13 @@ def location(update: Update, context: CallbackContext):
     # getting the feedback form the bot
     user_coordinates = update.effective_message.text
     coordinates = user_coordinates[8:].strip()
+
+    if len(coordinates) == 0:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="There are no coordinates\n"
+                                      "format is : /locate [lat], [long] \n"
+                                      "Example: /locate 1.2342, 8.345")
+
     user_lat, user_long = coordinates.replace(':', ',').replace('-', ',').split(',')
 
     geolocator = Nominatim(user_agent='geoapiExercises')
@@ -290,7 +297,7 @@ def location(update: Update, context: CallbackContext):
     locname = geolocator.reverse(user_location)
 
     dist = distance.distance(rest_location, user_location).km
-    print(dist)
+
 
     if dist <= 10:
         Location = locname.address
