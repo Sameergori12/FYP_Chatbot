@@ -55,11 +55,12 @@ def menu(update: Update, context: CallbackContext) -> None:
     default_or_not(update, context)
 
     context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=open('images/dailymenu.png', 'rb'))
-    if day == 'Monday':
+    if day == 'Friday':
         context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=open('images/friday.png', 'rb'))
     elif day == 'Sunday':
         context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=open('images/sunday.png', 'rb'))
 
+    # regular items(daily)
     menu_list = InlineKeyboardMarkup(
         [[InlineKeyboardButton('P1', callback_data='Chicken Pakodi'),
           InlineKeyboardButton('P2', callback_data='Chicken Pakodi'),

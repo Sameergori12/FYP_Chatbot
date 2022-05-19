@@ -81,6 +81,10 @@ def price_change(update: Update, context: CallbackContext):
         if edit == 'default':
             shutil.copyfile('original_menuitems.txt', 'temp_menuitems.txt')
             update.message.reply_text("Item Prices have been set to their default values")
+        elif len(edit)==0:
+            update.message.reply_text('There is not item for change. \n'
+                                      'Format: /change [exact item-name]-[prize]\n'
+                                      'for example: /change Basbousa-D223.0')
         else:
             # to capitalize the first letter of each word of item.
             edit = edit.title()

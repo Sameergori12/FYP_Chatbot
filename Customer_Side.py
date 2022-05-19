@@ -244,16 +244,28 @@ def action(update: Update, context: CallbackContext):
                     else:
                         context.bot.send_message(chat_id=update.effective_chat.id,
                                                  text="Sorry! you cannot checkout providing your delivery coordinates.")
-            Location = ''
-            pNumber = ''
-            Order_type = ''
+                    clear(update, context)
 
     elif choice == 'No_checkout':
         context.bot.send_message(chat_id=update.effective_chat.id, text="Checked Out")
-        cart_dict.clear()
+        clear(update, context)
+
+    elif choice == 'cancel':
+        context.bot.send_message(chat_id=update.effective_chat.id,text = 'Your order has been successfully cancelled.')
+        clear(update,context)
     # if input is anything beyond the above choices, asking the user regarding their problem.
     else:
         context.bot.send_message(chat_id=update.effective_chat.id, text="What's your problem")
+
+
+def clear(update: Update, context: CallbackContext):
+    global pNumber, Location, Order_type
+
+    pNumber = ''
+    Location = ''
+    Order_type = ''
+    cart_dict.clear()
+
 
 
 def phoneNumber(update: Update, context: CallbackContext):
@@ -332,6 +344,15 @@ def feedback(update: Update, context: CallbackContext):
                 f'{edit}\n \n ')
         update.message.reply_text('feedback submitted')
         f.close()
+
+
+def cancelOrder(update: Update, context: CallbackContext):
+    reply_buttons = InlineKeyboardMarkup([
+        [InlineKeyboardButton("Yes", callback_data="cancel"),
+         InlineKeyboardButton("No", callback_data='no')]
+    ])
+
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Are you sure you want to cancel the order", reply_markup=reply_buttons)
 
 
 # shows the useful commands during the session with a short description.
@@ -465,6 +486,7 @@ def main():
     dp.add_handler(CommandHandler('help', help_commands))
     dp.add_handler(CommandHandler('order_type', changeOrderType))
     dp.add_handler(CommandHandler('delete', delete))
+    dp.add_handler(CommandHandler('cancel', cancelOrder))
     dp.add_handler(CommandHandler('number', phoneNumber))
     dp.add_handler(CallbackQueryHandler(action))
 
